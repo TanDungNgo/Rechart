@@ -2,18 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 import style from "./style.css";
-import {
-  Bar,
-  Line,
-  LineChart,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  ComposedChart,
-} from "recharts";
+import { FaMap, FaChartLine } from "react-icons/fa";
+import ChartLine from "../components/ChartLine";
 
 function Home() {
   const [listCity, setListCity] = useState([]);
@@ -51,6 +41,7 @@ function Home() {
       })
       .catch(() => {});
   }, []);
+
   const renderCity = () => {
     return listCity.map((item) => {
       return (
@@ -85,113 +76,37 @@ function Home() {
     <div className="wrapper">
       <div className="header">
         <h2>
+          <FaChartLine className="icon" />
           このグラフは、日本の行政単位（地区）ごとの人口の変化を示しています
         </h2>
       </div>
       <div className="container">
         <div className="sidebar">
-          <h4>日本の行政単位</h4>
-          <div>
-            <select className="custom-select" onChange={handleChange}>
-              {renderCity()}
-            </select>
+          <div className="box">
+            <h4>
+              <FaMap className="icon" />
+              日本の行政単位
+            </h4>
+            <div>
+              <select className="custom-select" onChange={handleChange}>
+                {renderCity()}
+              </select>
+            </div>
           </div>
         </div>
         <div className="content">
-          <div className="card">
-            <h4>総人口</h4>
-            <ResponsiveContainer width="100%" aspect={3}>
-              <LineChart
-                width={500}
-                height={300}
-                data={totalPopulation}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line dataKey="value" fill="#8884d8" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="card">
-            <h4>年少人口</h4>
-            <ResponsiveContainer width="100%" aspect={3}>
-              <LineChart
-                width={500}
-                height={300}
-                data={youngPopulation}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="value" stroke="#ff7300" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="card">
-            <h4>生産年齢人口</h4>
-            <ResponsiveContainer width="100%" aspect={3}>
-              <LineChart
-                width={500}
-                height={300}
-                data={workingAgePopulation}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="value" stroke="#8884d8" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="card">
-            <h4>老年人口</h4>
-            <ResponsiveContainer width="100%" aspect={3}>
-              <LineChart
-                width={500}
-                height={300}
-                data={geriatricPopulation}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="value" stroke="#82ca9d" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <ChartLine header="総人口" data={totalPopulation} />
+          <ChartLine header="年少人口" data={youngPopulation} stroke="#ff7300" />
+          <ChartLine
+            header="生産年齢人口"
+            data={workingAgePopulation}
+            stroke="#82ca9d"
+          />
+          <ChartLine
+            header="老年人口"
+            data={geriatricPopulation}
+            stroke="#8884d8"
+          />
         </div>
       </div>
     </div>
