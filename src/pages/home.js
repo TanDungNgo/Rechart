@@ -4,6 +4,20 @@ import axios from "axios";
 import style from "./style.css";
 import { FaMap, FaChartLine } from "react-icons/fa";
 import ChartLine from "../components/ChartLine";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Area,
+  AreaChart,
+} from "recharts";
+
+const state = [];
 
 function Home() {
   const [listCity, setListCity] = useState([]);
@@ -11,6 +25,7 @@ function Home() {
   const [youngPopulation, setYoungPopulation] = useState([]);
   const [workingAgePopulation, setWorkingAgePopulation] = useState([]);
   const [geriatricPopulation, setGeriatricPopulation] = useState([]);
+  const [data, setData] = useState([]);
   useEffect(() => {
     axios
       .get("https://opendata.resas-portal.go.jp/api/v1/prefectures/", {
@@ -38,6 +53,17 @@ function Home() {
         setYoungPopulation(res.data.result.data[1].data);
         setWorkingAgePopulation(res.data.result.data[2].data);
         setGeriatricPopulation(res.data.result.data[3].data);
+        if (state.length === 0) {
+          for (let i = 0; i < res.data.result.data[0].data.length; i++) {
+            state.push({
+              year: res.data.result.data[0].data[i].year,
+              young: res.data.result.data[1].data[i].rate,
+              workingAge: res.data.result.data[2].data[i].rate,
+              geriatric: res.data.result.data[3].data[i].rate,
+            });
+          }
+        }
+        setData(state);
       })
       .catch(() => {});
   }, []);
@@ -45,7 +71,7 @@ function Home() {
   const renderCity = () => {
     return listCity.map((item) => {
       return (
-        <option key={item.prefCode} value={item.prefCode}>
+        <option key={item.prefCode} id={item.prefCode} value={item.prefName}>
           {item.prefName}
         </option>
       );
@@ -53,7 +79,8 @@ function Home() {
   };
 
   const handleChange = (e) => {
-    const id = e.target.value;
+    const selectedIndex = e.target.options.selectedIndex;
+    const id = e.target.options[selectedIndex].getAttribute("id");
     axios
       .get(
         `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=${id}`,
@@ -96,7 +123,54 @@ function Home() {
         </div>
         <div className="content">
           <ChartLine header="総人口" data={totalPopulation} />
-          <ChartLine header="年少人口" data={youngPopulation} stroke="#ff7300" />
+          <div className="card">
+            <h4>率人口</h4>
+            <ResponsiveContainer width="100%" aspect={3}>
+              <AreaChart
+                width={500}
+                height={400}
+                data={data}
+                margin={{
+                  top: 10,
+                  right: 30,
+                  left: 0,
+                  bottom: 0,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="year" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Area
+                  type="monotone"
+                  dataKey="young"
+                  stackId="1"
+                  stroke="#ff7300"
+                  fill="#ff7300"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="workingAge"
+                  stackId="1"
+                  stroke="#82ca9d"
+                  fill="#82ca9d"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="geriatric"
+                  stackId="1"
+                  stroke="#8884d8"
+                  fill="#8884d8"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+          <ChartLine
+            header="年少人口"
+            data={youngPopulation}
+            stroke="#ff7300"
+          />
           <ChartLine
             header="生産年齢人口"
             data={workingAgePopulation}
