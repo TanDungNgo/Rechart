@@ -17,8 +17,6 @@ import {
   AreaChart,
 } from "recharts";
 
-const state = [];
-
 function Home() {
   const [listCity, setListCity] = useState([]);
   const [totalPopulation, setTotalPopulation] = useState([]);
@@ -53,17 +51,16 @@ function Home() {
         setYoungPopulation(res.data.result.data[1].data);
         setWorkingAgePopulation(res.data.result.data[2].data);
         setGeriatricPopulation(res.data.result.data[3].data);
-        if (state.length === 0) {
-          for (let i = 0; i < res.data.result.data[0].data.length; i++) {
-            state.push({
-              year: res.data.result.data[0].data[i].year,
-              young: res.data.result.data[1].data[i].rate,
-              workingAge: res.data.result.data[2].data[i].rate,
-              geriatric: res.data.result.data[3].data[i].rate,
-            });
-          }
+        const temp = [];
+        for (let i = 0; i < res.data.result.data[0].data.length; i++) {
+          temp.push({
+            year: res.data.result.data[0].data[i].year,
+            young: res.data.result.data[1].data[i].rate,
+            workingAge: res.data.result.data[2].data[i].rate,
+            geriatric: res.data.result.data[3].data[i].rate,
+          });
         }
-        setData(state);
+        setData(temp);
       })
       .catch(() => {});
   }, []);
@@ -95,6 +92,16 @@ function Home() {
         setYoungPopulation(res.data.result.data[1].data);
         setWorkingAgePopulation(res.data.result.data[2].data);
         setGeriatricPopulation(res.data.result.data[3].data);
+        const temp = [];
+        for (let i = 0; i < res.data.result.data[0].data.length; i++) {
+          temp.push({
+            year: res.data.result.data[0].data[i].year,
+            young: res.data.result.data[1].data[i].rate,
+            workingAge: res.data.result.data[2].data[i].rate,
+            geriatric: res.data.result.data[3].data[i].rate,
+          });
+        }
+        setData(temp);
       })
       .catch(() => {});
   };
