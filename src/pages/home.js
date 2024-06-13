@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
-import style from "./style.css";
+import "./style.css";
 import { FaMap, FaChartLine } from "react-icons/fa";
 import ChartLine from "../components/ChartLine";
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
