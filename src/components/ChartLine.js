@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import style from "../pages/style.css";
+import "../pages/style.css";
 
 function ChartLine({ header, data, stroke }) {
   return (
